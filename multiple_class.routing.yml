@@ -1,0 +1,7 @@
+multiple_class.settings:
+  path: '/admin/config/multiple-class/settings'
+  defaults:
+    _form: '\Drupal\multiple_class\Form\MultipleClassSettingsForm'
+    _title: 'Multiple Class SettingsForm'
+  requirements:
+    _role: 'authenticated'

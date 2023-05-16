@@ -1,0 +1,7 @@
+name: Multiple Class
+description: To add multiple classes to pages
+type: module
+configure: multiple_class.settings
+core_version_requirement: ^8.8 || ^9
+version: 1.0.0
+

@@ -1,0 +1,4 @@
+multiple_class.settings:
+  title: 'Add Multiple Classes'
+  route_name: multiple_class.settings
+  parent: system.admin_config_ui
