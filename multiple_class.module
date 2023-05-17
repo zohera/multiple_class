@@ -19,7 +19,6 @@ function multiple_class_preprocess_html(&$variables) {
   // Get pages from multiple class form settings.
   $config = \Drupal::config('multiple_class.settings');
 
-  //var_dump('came');var_dump($config->get('add_more'));
   if (!empty($config->get('add_more'))) {
 
     $get_data = $config->get('add_more');
