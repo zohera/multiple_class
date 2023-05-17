@@ -1,7 +1,7 @@
 multiple_class.settings:
-  path: '/admin/config/multiple-class/settings'
+  path: '/admin/config/content/multiple-class'
   defaults:
     _form: '\Drupal\multiple_class\Form\MultipleClassSettingsForm'
-    _title: 'Multiple Class SettingsForm'
+    _title: 'Custom classes for pages'
   requirements:
-    _role: 'authenticated'
+    _permission: 'access content'

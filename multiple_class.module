@@ -16,41 +16,44 @@ function multiple_class_preprocess_html(&$variables) {
   // Get the current route name.
   $route_name = \Drupal::service('path.current')->getPath();
 
-  // Get page settings from multiple class form.
+  // Get pages from multiple class form settings.
   $config = \Drupal::config('multiple_class.settings');
-  $get_pages = explode(PHP_EOL, $config->get('specific_pages'));
 
-  // Get classes settings from multiple class form.
-  $get_classes = $config->get('add_class');
-  $add_class = '';
-  foreach ($get_classes as $class) {
-    $add_class .= $class['extra_class'] . '  ';
-  }
+  //var_dump('came');var_dump($config->get('add_more'));
+  if (!empty($config->get('add_more'))) {
 
-  foreach ($get_pages as $url) {
+    $get_data = $config->get('add_more');
+    foreach ($get_data as $value) {
+      $url = $value['extra_path'];
+      $add_class = $value['extra_class'];
+      $check_wildcard = FALSE;
+      $front_page = \Drupal::service('path.matcher')->isFrontPage();
+      $enteredPath = \Drupal::service('path_alias.manager')->getPathByAlias($url);
+      $alias_path = \Drupal::service('path_alias.manager')->getAliasByPath($route_name);
 
-   $check_wildcard = FALSE;
-   $front_page = \Drupal::service('path.matcher')->isFrontPage();
-   $enteredPath = \Drupal::service('path_alias.manager')->getPathByAlias($url);
-   $alias_path = \Drupal::service('path_alias.manager')->getAliasByPath($route_name);
+      // Check wildcard.
+      if (strpos($url, '*') !== FALSE) {
+        $path = str_replace('/*', '', $url);
+        $path = str_replace('*', '', $path);
+        if (strpos($alias_path, $path) === 0) {
+          $check_wildcard = TRUE;
+        }
+      }
 
-   // Check wildcard.
-   if (strpos($url, '*') !== FALSE) {
-     $path = str_replace('/*', '', $url);
-     $path = str_replace('*', '', $path);
-     if (strpos($alias_path, $path) === 0) {
-        $check_wildcard = TRUE;
-     }
-   }
+      // Add class only if  current path and entered path by user matches.
+      if (($route_name == $enteredPath) || ($check_wildcard)) {
+        $variables['attributes']['class'][] = $add_class;
+      }
 
-   // Add class only if  current path and entered path by user matches.
-   if (($route_name == $enteredPath) || ($check_wildcard)) {
-     $variables['attributes']['class'][] = $add_class;
-   }
+      // Add class only if current page matches with home page.
+      if (($front_page) && ($enteredPath == "<front>")) {
+        $variables['attributes']['class'][] = $add_class;
+      }
 
-   // Add class only if current page matches with home page or user entered path for all.
-   elseif (($front_page) || ($enteredPath == "/*")) {
-     $variables['attributes']['class'][] = $add_class;
-   }
+      // user entered path for all.
+      if (($enteredPath == "/*")) {
+        $variables['attributes']['class'][] = $add_class;
+      }
+    }
   }
 }
